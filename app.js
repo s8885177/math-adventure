@@ -6,7 +6,7 @@
 
   const ZONES = [
     {
-      id: 'compare', name: '比大小峽谷', emoji: '⚖️', color: '#F2A73B',
+      id: 'compare', name: '比大小峽谷', mascotClass: 'mascot--compare', color: '#FFD23F',
       desc: '誰是數字老大？眼明手快分勝負',
       modes: [
         { id: 'speedpick', name: '誰是老大', emoji: '🏁', sub: '限時搶答，點出比較大的數字' },
@@ -14,7 +14,7 @@
       ]
     },
     {
-      id: 'numberline', name: '數線秘境', emoji: '🧭', color: '#5FCBA6',
+      id: 'numberline', name: '數線秘境', mascotClass: 'mascot--numberline', color: '#33FFC7',
       desc: '在探險地圖上找出正確的刻度位置',
       modes: [
         { id: 'lineagent', name: '數線特工', emoji: '📍', sub: '點出目標數字在數線上的位置' },
@@ -22,7 +22,7 @@
       ]
     },
     {
-      id: 'add3', name: '三位數加法林', emoji: '🌿', color: '#EF6C57',
+      id: 'add3', name: '三位數加法林', mascotClass: 'mascot--add3', color: '#FF4D8D',
       desc: '進位加法基礎訓練，越練越快',
       modes: [
         { id: 'columnpuzzle', name: '直式拼圖', emoji: '🧱', sub: '逐位填入答案，完成直式計算' },
@@ -30,7 +30,7 @@
       ]
     },
     {
-      id: 'add4', name: '四位數寶藏塔', emoji: '🏯', color: '#8B5FBF',
+      id: 'add4', name: '四位數寶藏塔', mascotClass: 'mascot--add4', color: '#8C4DFF',
       desc: '進位鏈挑戰，找出藏在計算裡的錯誤',
       modes: [
         { id: 'treasurecolumn', name: '尋寶直式', emoji: '💰', sub: '挑戰連續進位的直式計算' },
@@ -93,7 +93,7 @@
       div.className = 'zone-node';
       div.style.setProperty('--zone-color', z.color);
       div.innerHTML = `
-        <div class="flag">${z.emoji}</div>
+        <div class="flag"><div class="mascot-blob ${z.mascotClass}"><div class="eye eye-l"></div><div class="eye eye-r"></div><div class="mouth"></div></div></div>
         <div class="info">
           <div class="name">${z.name}</div>
           <div class="desc">${z.desc}</div>
