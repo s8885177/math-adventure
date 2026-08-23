@@ -522,6 +522,13 @@
 
   // ---------------- WIRE UP ----------------
   window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quick-name-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.getElementById('nickname-input').value = btn.dataset.name;
+        state.nickname = btn.dataset.name;
+        localStorage.setItem('mathAdventure_nickname', btn.dataset.name);
+      };
+    });
     document.getElementById('start-adventure-btn').onclick = () => { renderZoneSelect(); showScreen('zoneselect'); };
     document.getElementById('view-leaderboard-home-btn').onclick = () => {
       saveNicknameIfNeeded();
