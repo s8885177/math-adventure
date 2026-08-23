@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap');
 
 :root {
-  --jungle-deep: #0F3D3E;
-  --jungle-mid: #16534F;
-  --gold: #F2A73B;
-  --coral: #EF6C57;
-  --cream: #FFF7E8;
-  --violet: #8B5FBF;
-  --mint: #5FCBA6;
-  --ink: #0B2B2C;
+  --jungle-deep: #12021C;
+  --jungle-mid: #240B36;
+  --gold: #FFD23F;
+  --coral: #FF4D8D;
+  --cream: #FFF9FC;
+  --violet: #8C4DFF;
+  --mint: #33FFC7;
+  --ink: #170221;
   --radius-lg: 28px;
   --radius-md: 18px;
-  --shadow-pop: 0 10px 0 rgba(0,0,0,0.18);
+  --shadow-pop: 0 10px 0 rgba(0,0,0,0.35);
 }
 
 * { box-sizing: border-box; }
@@ -20,9 +20,10 @@ html, body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 15% 10%, rgba(242,167,59,0.18), transparent 45%),
-    radial-gradient(circle at 85% 85%, rgba(139,95,191,0.22), transparent 50%),
-    linear-gradient(160deg, var(--jungle-deep), #0A2A2B 70%);
+    radial-gradient(circle at 12% 8%, rgba(255,77,141,0.28), transparent 42%),
+    radial-gradient(circle at 88% 18%, rgba(51,255,199,0.22), transparent 46%),
+    radial-gradient(circle at 50% 90%, rgba(140,77,255,0.25), transparent 50%),
+    linear-gradient(165deg, var(--jungle-deep), #0A0113 75%);
   color: var(--cream);
   font-family: 'Nunito', sans-serif;
   overscroll-behavior: none;
@@ -97,6 +98,75 @@ button:focus-visible, input:focus-visible {
   margin-bottom: 18px;
 }
 .hero-card .mascot { font-size: 3.2rem; display: block; margin-bottom: 8px; }
+
+/* ---------- 原創絨毛怪獸吉祥物（純 CSS 繪製，非任何既有角色） ---------- */
+.mascot-blob {
+  position: relative;
+  width: 56px; height: 56px;
+  border-radius: 48% 48% 44% 44% / 58% 58% 42% 42%;
+  flex-shrink: 0;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.35), inset 0 -8px 12px rgba(0,0,0,0.18);
+  background: var(--mc-color, var(--gold));
+}
+.mascot-blob::before, .mascot-blob::after {
+  /* 兩顆尖角/耳朵 */
+  content: '';
+  position: absolute;
+  top: -8px;
+  width: 14px; height: 18px;
+  background: var(--mc-color, var(--gold));
+  border-radius: 40% 60% 0 0;
+}
+.mascot-blob::before { left: 8px; transform: rotate(-18deg); }
+.mascot-blob::after { right: 8px; transform: rotate(18deg); }
+.mascot-blob .eye {
+  position: absolute; top: 32%;
+  width: 15px; height: 15px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--ink) inset;
+}
+.mascot-blob .eye::after {
+  content: '';
+  position: absolute; top: 4px; left: 4px;
+  width: 7px; height: 7px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+.mascot-blob .eye.eye-l { left: 14%; }
+.mascot-blob .eye.eye-r { right: 14%; }
+.mascot-blob .mouth {
+  position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
+  width: 58%; height: 32%;
+  background: var(--ink);
+  border-radius: 10% 10% 55% 55% / 10% 10% 70% 70%;
+  overflow: hidden;
+}
+.mascot-blob .mouth::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 45%;
+  background-image: repeating-linear-gradient(90deg, #fff 0 5px, transparent 5px 10px);
+}
+.mascot-blob.mascot--compare { --mc-color: #FFD23F; }
+.mascot-blob.mascot--numberline { --mc-color: #33FFC7; }
+.mascot-blob.mascot--add3 { --mc-color: #FF4D8D; }
+.mascot-blob.mascot--add4 { --mc-color: #8C4DFF; }
+.mascot-blob.mascot--review { --mc-color: #FF8A3D; }
+.mascot-blob.mascot--player {
+  --mc-color: #33FFC7;
+  width: 84px; height: 84px;
+  margin: 0 auto 8px;
+  background: linear-gradient(160deg, #33FFC7, #8C4DFF 70%);
+}
+.mascot-blob.mascot--player .eye { width: 20px; height: 20px; top: 30%; }
+.mascot-blob.mascot--player .eye::after { width: 9px; height: 9px; top: 5px; left: 5px; }
+.mascot-blob.mascot--player .cap {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  width: 50px; height: 20px;
+  background: var(--coral);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+}
 .hero-card h1 { font-size: 1.7rem; margin: 4px 0; color: var(--cream); }
 .hero-card p { color: rgba(255,247,232,0.75); margin: 6px 0 16px; font-size: 0.95rem; }
 
@@ -177,13 +247,9 @@ button:focus-visible, input:focus-visible {
   border: 2px solid rgba(255,255,255,0.08);
 }
 .zone-node .flag {
-  width: 46px; height: 46px;
-  border-radius: 50%;
+  width: 56px; height: 56px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem;
-  background: var(--zone-color, var(--gold));
   flex-shrink: 0;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
 }
 .zone-node .info { flex: 1; }
 .zone-node .info .name { font-family: 'Baloo 2'; font-size: 1.05rem; margin-bottom: 2px; }
