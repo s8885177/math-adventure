@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Math Adventure 數學探險隊</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="machete">🗡️</span> Math Adventure</div>
+  </div>
+
+  <!-- ============ HOME ============ -->
+  <section id="screen-home" class="screen active">
+    <div class="hero-card">
+      <span class="mascot">🦜🌴</span>
+      <h1>數學探險隊</h1>
+      <p>先修三年級數學，跟著探險小隊闖進叢林、找出寶藏！</p>
+    </div>
+
+    <div class="nickname-row">
+      <input id="nickname-input" type="text" placeholder="你的探險家名字" maxlength="12" />
+    </div>
+
+    <button class="big-btn" id="start-adventure-btn">🚀 開始探險</button>
+    <div style="height:10px;"></div>
+    <button class="big-btn ghost" id="view-leaderboard-home-btn">🏆 查看英雄榜</button>
+  </section>
+
+  <!-- ============ ZONE SELECT ============ -->
+  <section id="screen-zoneselect" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" id="back-to-home-1">←</button>
+      <h2 class="display" style="margin:0;">探險地圖</h2>
+      <div style="width:40px;"></div>
+    </div>
+    <div class="trail-map">
+      <div class="trail-path"></div>
+      <div id="zone-list"></div>
+      <div class="zone-node" id="review-zone-btn" style="--zone-color:#F2A73B;">
+        <div class="flag">🎯</div>
+        <div class="info">
+          <div class="name">複習特訓營</div>
+          <div class="desc count">目前沒有錯題，先去闖關吧！</div>
+        </div>
+        <button class="go">複習</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MODE SELECT ============ -->
+  <section id="screen-modeselect" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" id="back-to-zones">←</button>
+      <h2 class="display" id="modeselect-title" style="margin:0;"></h2>
+      <div style="width:40px;"></div>
+    </div>
+    <div id="mode-list"></div>
+  </section>
+
+  <!-- ============ PLAY ============ -->
+  <section id="screen-play" class="screen">
+    <div class="hud">
+      <span id="hud-counter" style="font-size:0.9rem;color:rgba(255,247,232,0.7);"></span>
+      <div class="progress-track"><div class="progress-fill" id="hud-progress-fill"></div></div>
+      <span class="streak" id="hud-streak"></span>
+    </div>
+    <div id="question-area"></div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="screen-result" class="screen">
+    <div class="result-card">
+      <div style="font-size:0.9rem;opacity:0.8;" id="result-zone-name"></div>
+      <div class="big-score" id="result-score">0</div>
+      <div style="font-size:0.85rem;opacity:0.85;">專注力分數</div>
+      <div class="result-stats">
+        <div class="stat"><div class="val" id="result-accuracy">0%</div><div class="lbl">答對率</div></div>
+        <div class="stat"><div class="val" id="result-speed">0秒</div><div class="lbl">平均速度</div></div>
+        <div class="stat"><div class="val" id="result-streak">x0</div><div class="lbl">最高連擊</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">上傳到英雄榜</div>
+    <div class="room-code-row">
+      <input id="room-code-input" type="text" placeholder="房間代碼（跟同學用同一組）" maxlength="16" />
+    </div>
+    <button class="big-btn secondary" id="save-score-btn">📮 上傳成績並看排行</button>
+    <div style="height:8px;"></div>
+    <button class="big-btn ghost" id="skip-save-btn">先不上傳，回首頁</button>
+    <div style="height:8px;"></div>
+    <button class="big-btn ghost" id="play-again-btn">🔁 再玩一次</button>
+  </section>
+
+  <!-- ============ LEADERBOARD ============ -->
+  <section id="screen-leaderboard" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" id="lb-back-btn">←</button>
+      <h2 class="display" style="margin:0;">🏆 英雄榜</h2>
+      <div style="width:40px;"></div>
+    </div>
+    <div style="text-align:center;font-size:0.85rem;opacity:0.7;margin-bottom:12px;">房間代碼：<span id="lb-room-label"></span></div>
+    <div id="lb-list"></div>
+  </section>
+
+</div>
+
+<script src="questions.js" defer></script>
+<script src="effects.js" defer></script>
+<script type="module" src="firebase-config.js"></script>
+<script src="app.js" defer></script>
+</body>
+</html>
