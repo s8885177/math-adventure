@@ -141,6 +141,18 @@ button:focus-visible, input:focus-visible {
 }
 .nickname-row input::placeholder { color: rgba(255,247,232,0.45); }
 
+.quick-name-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.quick-name-btn {
+  background: rgba(242,167,59,0.18);
+  color: var(--gold);
+  border: 2px solid rgba(242,167,59,0.4);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.quick-name-btn:active { background: rgba(242,167,59,0.32); }
+
 /* ---------- 探險地圖 (Zone select — signature element) ---------- */
 .trail-map {
   position: relative;
