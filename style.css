@@ -222,6 +222,11 @@ button:focus-visible, input:focus-visible {
   font-size: 0.9rem;
 }
 .quick-name-btn:active { background: rgba(242,167,59,0.32); }
+.quick-name-btn.selected {
+  background: var(--mint);
+  color: var(--ink);
+  border-color: var(--mint);
+}
 
 /* ---------- 探險地圖 (Zone select — signature element) ---------- */
 .trail-map {
@@ -317,6 +322,22 @@ button:focus-visible, input:focus-visible {
   gap: 14px;
 }
 .question-card .prompt { font-family: 'Baloo 2'; font-size: 1.15rem; }
+.question-card .prompt .highlight-word { color: var(--coral); text-decoration: underline; text-decoration-style: wavy; }
+.prompt-badge {
+  display: inline-block;
+  background: rgba(255,77,141,0.15);
+  color: var(--coral);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 4px;
+  animation: badgePulse 1.4s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
 .question-card .big-numbers { font-family: 'Baloo 2'; font-size: 2.1rem; display: flex; align-items: center; gap: 16px; }
 
 .choice-grid {
@@ -472,6 +493,16 @@ button:focus-visible, input:focus-visible {
 .lb-row.rank-3 .rank { color: #CD7F32; }
 .lb-row .name { flex: 1; font-weight: 700; }
 .lb-row .score { font-family: 'Baloo 2'; color: var(--mint); }
+.lb-row--mine { border: 2px solid var(--mint); background: rgba(51,255,199,0.1); }
+.you-tag {
+  background: var(--mint);
+  color: var(--ink);
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  vertical-align: middle;
+}
 
 .room-code-row { display: flex; gap: 8px; margin-bottom: 14px; }
 .room-code-row input { flex: 1; padding: 10px 12px; border-radius: 12px; border: 2px solid rgba(255,247,232,0.25); background: rgba(0,0,0,0.2); color: var(--cream); }
