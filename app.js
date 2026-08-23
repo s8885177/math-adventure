@@ -396,7 +396,7 @@
   function renderColumnPuzzle(card, q, maxLen) {
     const answerLen = String(q.answer).length;
     card.innerHTML = `
-      <div class="prompt">直式計算：填入每一位數字</div>
+      <div class="prompt">直式計算：從個位數開始，由右往左填入答案</div>
       <div class="column-add">
         <div class="row"><div class="digit-static">&nbsp;</div>${digitCells(q.a, answerLen)}</div>
         <div class="op-row"><div class="digit-static">+</div>${digitCells(q.b, answerLen)}</div>
@@ -404,13 +404,22 @@
       </div>
       <button class="confirm-btn" id="col-confirm">確認答案</button>
     `;
+    // inputs 陣列順序是「由左到右」對應數字位數（左邊是高位、右邊是個位）。
+    // 直式計算規則是先算個位，所以預設游標從「最右邊（個位）」開始，
+    // 每輸入一位就往左移動到下一個位數，符合正確的直式運算順序。
     const inputs = [...card.querySelectorAll('.answer-input')];
+    const lastIdx = inputs.length - 1;
     inputs.forEach((inp, idx) => {
       inp.addEventListener('input', () => {
-        if (inp.value.length >= 1 && idx < inputs.length - 1) inputs[idx + 1].focus();
+        if (inp.value.length >= 1 && idx > 0) inputs[idx - 1].focus();
+      });
+      inp.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && inp.value === '' && idx < lastIdx) {
+          inputs[idx + 1].focus();
+        }
       });
     });
-    if (inputs[0]) setTimeout(() => inputs[0].focus(), 50);
+    if (inputs[lastIdx]) setTimeout(() => inputs[lastIdx].focus(), 50);
     card.querySelector('#col-confirm').onclick = () => {
       const combined = inputs.map(i => i.value || '').join('');
       FX.playTapTick();
