@@ -179,6 +179,9 @@
   function generateQuestion(zoneId, modeId, difficulty) {
     switch (zoneId) {
       case 'compare':
+        if (modeId === 'speedpick') {
+          return { zoneId, modeId, ...Q.genCompare(difficulty), askFor: Math.random() < 0.5 ? 'bigger' : 'smaller' };
+        }
         return { zoneId, modeId, ...Q.genCompare(difficulty) };
       case 'numberline':
         return { zoneId, modeId, ...Q.genNumberLine(difficulty, modeId === 'lineagent' ? 'find-position' : 'jump') };
@@ -269,15 +272,21 @@
   // ---------- Zone: 比大小 ----------
   function renderCompare(card, q) {
     if (q.modeId === 'speedpick') {
+      const askBigger = q.askFor !== 'smaller';
       card.innerHTML = `
-        <div class="prompt">哪一個數字比較大？點下去！</div>
+        <div class="prompt-badge">👀 看清楚題目！</div>
+        <div class="prompt">哪一個數字比較<span class="highlight-word">${askBigger ? '大' : '小'}</span>？點下去！</div>
         <div class="choice-grid">
           <button class="choice-btn" data-val="a">${q.a}</button>
           <button class="choice-btn" data-val="b">${q.b}</button>
         </div>
       `;
-      card.querySelector('[data-val="a"]').onclick = () => { FX.playTapTick(); afterAnswer(q.a > q.b, q); };
-      card.querySelector('[data-val="b"]').onclick = () => { FX.playTapTick(); afterAnswer(q.b > q.a, q); };
+      const checkPick = (mine, other) => {
+        const isBigger = mine > other;
+        return askBigger ? isBigger : !isBigger;
+      };
+      card.querySelector('[data-val="a"]').onclick = () => { FX.playTapTick(); afterAnswer(checkPick(q.a, q.b), q); };
+      card.querySelector('[data-val="b"]').onclick = () => { FX.playTapTick(); afterAnswer(checkPick(q.b, q.a), q); };
     } else {
       card.innerHTML = `
         <div class="prompt">選出正確的符號</div>
@@ -476,11 +485,8 @@
     state.roomCode = roomCode || 'public';
     localStorage.setItem('mathAdventure_roomCode', state.roomCode);
 
-    const btn = document.getElementById('save-score-btn');
-    if (btn) { btn.disabled = true; btn.textContent = '上傳中…'; }
-
     const total = state.queue.length;
-    await window.MathFirebase.submitScore({
+    const myEntry = {
       name: state.nickname || '小勇者',
       roomCode: state.roomCode,
       zone: state.zone.id,
@@ -488,28 +494,42 @@
       avgSeconds: Number((state.times.reduce((a, b) => a + b, 0) / state.times.length).toFixed(1)),
       focusScore: state.lastFocusScore,
       correctCount: state.correctCount,
-      totalCount: total
-    });
+      totalCount: total,
+      __mine: true
+    };
 
-    showLeaderboard(state.roomCode);
+    // 立刻切到英雄榜畫面（不卡在結果頁），上傳跟讀取同時進行，感覺快很多
+    showLeaderboard(state.roomCode, myEntry);
+    window.MathFirebase.submitScore(myEntry); // 背景送出，不用等它完成
   }
 
   // ---------------- LEADERBOARD ----------------
-  async function showLeaderboard(roomCode) {
+  async function showLeaderboard(roomCode, optimisticEntry) {
     showScreen('leaderboard');
     document.getElementById('lb-room-label').textContent = roomCode || 'public';
     const listEl = document.getElementById('lb-list');
     listEl.innerHTML = '<div class="spinner"></div>';
+
     const res = await window.MathFirebase.fetchLeaderboard(roomCode || 'public');
+    let rows = res.ok ? [...res.rows] : [];
+
+    // 把剛剛這一局的成績也放進榜單（就算伺服器還沒同步完成也看得到自己的分數）
+    if (optimisticEntry) {
+      const alreadyThere = rows.some(r => r.name === optimisticEntry.name && r.focusScore === optimisticEntry.focusScore && r.accuracy === optimisticEntry.accuracy);
+      if (!alreadyThere) rows.push(optimisticEntry);
+    }
+    rows.sort((a, b) => (b.focusScore || 0) - (a.focusScore || 0));
+    rows = rows.slice(0, 20);
+
     listEl.innerHTML = '';
-    if (!res.ok || res.rows.length === 0) {
+    if (rows.length === 0) {
       listEl.innerHTML = `<div class="empty-state"><span class="emoji">🗺️</span>這個房間還沒有人上榜，當第一個探險家吧！</div>`;
       return;
     }
-    res.rows.forEach((row, idx) => {
+    rows.forEach((row, idx) => {
       const div = document.createElement('div');
-      div.className = `lb-row rank-${idx + 1}`;
-      div.innerHTML = `<div class="rank">${idx + 1}</div><div class="name">${escapeHtml(row.name)}</div><div class="score">${row.focusScore} 分</div>`;
+      div.className = `lb-row rank-${idx + 1}${row.__mine ? ' lb-row--mine' : ''}`;
+      div.innerHTML = `<div class="rank">${idx + 1}</div><div class="name">${escapeHtml(row.name)}${row.__mine ? ' <span class="you-tag">你</span>' : ''}</div><div class="score">${row.focusScore} 分</div>`;
       listEl.appendChild(div);
     });
   }
@@ -523,11 +543,13 @@
   // ---------------- WIRE UP ----------------
   window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.quick-name-btn').forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener('click', () => {
         document.getElementById('nickname-input').value = btn.dataset.name;
         state.nickname = btn.dataset.name;
         localStorage.setItem('mathAdventure_nickname', btn.dataset.name);
-      };
+        document.querySelectorAll('.quick-name-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
     });
     document.getElementById('start-adventure-btn').onclick = () => { renderZoneSelect(); showScreen('zoneselect'); };
     document.getElementById('view-leaderboard-home-btn').onclick = () => {
